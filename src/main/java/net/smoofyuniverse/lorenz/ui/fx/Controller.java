@@ -28,7 +28,8 @@ import net.smoofyuniverse.lorenz.ui.gl.Camera;
 import net.smoofyuniverse.lorenz.util.Updatable;
 
 public final class Controller implements Updatable {
-	public final Camera camera;
+	private final Camera camera;
+	private Node installedNode;
 
 	private boolean zoomIn, zoomOut, left, right, forward, backward, up, down, speedUp, slowDown;
 	private float speed = 1;
@@ -41,13 +42,26 @@ public final class Controller implements Updatable {
 	}
 
 	public void installMouseListeners(Node node) {
+		if (this.installedNode != null)
+			throw new IllegalStateException();
+
+		node.setOnKeyPressed(this::onKeyPressed);
+		node.setOnKeyReleased(this::onKeyReleased);
 		node.setOnScroll(this::onScroll);
+		node.setOnMousePressed(this::onMousePressed);
 		node.setOnMouseReleased(this::onMouseReleased);
 		node.setOnMouseDragged(this::onMouseDragged);
+
+		this.installedNode = node;
 	}
 
 	public void onScroll(ScrollEvent e) {
 		this.camera.roll((float) e.getDeltaY() * -0.002f);
+	}
+
+	public void onMousePressed(MouseEvent e) {
+		if (this.installedNode != null)
+			this.installedNode.requestFocus();
 	}
 
 	public void onMouseReleased(MouseEvent e) {

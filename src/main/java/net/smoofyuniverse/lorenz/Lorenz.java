@@ -22,7 +22,6 @@
 
 package net.smoofyuniverse.lorenz;
 
-import javafx.scene.Scene;
 import net.smoofyuniverse.common.app.App;
 import net.smoofyuniverse.common.app.Application;
 import net.smoofyuniverse.common.app.Arguments;
@@ -43,11 +42,7 @@ public class Lorenz extends Application {
 
 		App.runLater(() -> {
 			initStage(800, 600, true, "favicon.png");
-			UserInterface ui = new UserInterface();
-			Scene scene = new Scene(ui);
-			scene.setOnKeyPressed(ui::onKeyPressed);
-			scene.setOnKeyReleased(ui::onKeyReleased);
-			setScene(scene).show();
+			setScene(new UserInterface()).show();
 		});
 
 		checkForUpdate();

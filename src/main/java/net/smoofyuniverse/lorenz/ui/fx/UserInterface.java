@@ -75,6 +75,7 @@ public class UserInterface extends BorderPane {
 
 		setCenter(this.center);
 
+		setOnKeyPressed(this::onKeyPressed);
 
 		this.renderLoop.updatables.add(this.glPane);
 		this.renderLoop.updatables.add(() -> {
@@ -119,11 +120,5 @@ public class UserInterface extends BorderPane {
 					setMaxFPS(this.maxFps - 1);
 				break;
 		}
-
-		this.controller.onKeyPressed(e);
-	}
-
-	public void onKeyReleased(KeyEvent e) {
-		this.controller.onKeyReleased(e);
 	}
 }
