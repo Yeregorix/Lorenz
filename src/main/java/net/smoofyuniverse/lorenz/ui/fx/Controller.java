@@ -88,14 +88,6 @@ public final class Controller implements Updatable {
 		this.camera.yaw((float) dx * 0.002f * getZoomFactor());
 	}
 
-	public float getZoomFactor() {
-		return this.camera.getFOV() / Camera.DEFAULT_FOV;
-	}
-
-	public float getSpeed() {
-		return this.speed;
-	}
-
 	@Override
 	public void update() {
 		float z = 0;
@@ -133,9 +125,17 @@ public final class Controller implements Updatable {
 
 		float l = dx * dx + dy * dy + dz * dz;
 		if (l != 0) {
-			float f = 0.04f * getZoomFactor() * this.speed / (float) Math.sqrt(l);
+			float f = 0.4f * getZoomFactor() * this.speed / (float) Math.sqrt(l);
 			this.camera.move(dx * f, dy * f, dz * f);
 		}
+	}
+
+	public float getSpeed() {
+		return this.speed;
+	}
+
+	private float getZoomFactor() {
+		return this.camera.getFOV() / Camera.DEFAULT_FOV;
 	}
 
 	public void onKeyPressed(KeyEvent e) {

@@ -36,12 +36,14 @@ import net.smoofyuniverse.lorenz.math.Function;
 import net.smoofyuniverse.lorenz.math.NumericalSolver;
 import net.smoofyuniverse.lorenz.math.Series;
 import net.smoofyuniverse.lorenz.math.vector.Vector3d;
+import net.smoofyuniverse.lorenz.math.vector.Vector3f;
 import net.smoofyuniverse.lorenz.ui.gl.Camera;
 import net.smoofyuniverse.lorenz.ui.gl.Renderer;
 import net.smoofyuniverse.lorenz.ui.gl.ScatterChart;
 import net.smoofyuniverse.lorenz.util.Loop;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 public class UserInterface extends BorderPane {
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
@@ -79,18 +81,19 @@ public class UserInterface extends BorderPane {
 		setOnKeyPressed(this::onKeyPressed);
 
 		this.renderLoop.updatables.add(this.glPane);
-		this.renderLoop.updatables.add(() -> {
-			double f = this.renderLoop.getCurrentFrequency();
-			Platform.runLater(() -> this.details.setText(
-					"IPS: " + (int) f + " / " + this.maxFps
-							+ "\nZoom: " + DECIMAL_FORMAT.format(this.controller.getZoomFactor())
-							+ "\nVitesse: " + DECIMAL_FORMAT.format(this.controller.getSpeed())
-							+ "\nMode: " + this.glPane.getRenderMode()));
-		});
 		setMaxFPS(60);
 		this.renderLoop.start();
 
 		this.controlLoop.updatables.add(this.controller);
+		this.controlLoop.updatables.add(() -> {
+			Platform.runLater(() -> this.details.setText(
+					"IPS: " + (int) this.renderLoop.getCurrentFrequency() + " / " + this.maxFps
+							+ "\nMode de rendu: " + this.glPane.getRenderMode()
+							+ "\nChamp de vision: " + format(this.camera.getFOV()) + "°"
+							+ "\nPosition: " + format(this.camera.getPosition())
+							+ "\nVitesse: " + format(this.controller.getSpeed())
+			));
+		});
 		this.controlLoop.setPrefFrequency(30);
 		this.controlLoop.start();
 
@@ -121,5 +124,19 @@ public class UserInterface extends BorderPane {
 					setMaxFPS(this.maxFps - 1);
 				break;
 		}
+	}
+
+	private static String format(float value) {
+		return DECIMAL_FORMAT.format(value);
+	}
+
+	private static String format(Vector3f value) {
+		return "(" + format(value.x) + ", " + format(value.y) + ", " + format(value.z) + ")";
+	}
+
+	static {
+		DecimalFormatSymbols dfs = DECIMAL_FORMAT.getDecimalFormatSymbols();
+		dfs.setDecimalSeparator('.');
+		DECIMAL_FORMAT.setDecimalFormatSymbols(dfs);
 	}
 }

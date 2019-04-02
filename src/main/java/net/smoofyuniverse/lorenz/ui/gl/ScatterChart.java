@@ -35,8 +35,6 @@ public class ScatterChart {
 	public final List<Series> data = new ArrayList<>();
 
 	public void render(GL2 gl) {
-		gl.glScalef(0.1f, 0.1f, 0.1f);
-
 		gl.glLineWidth(2);
 		gl.glBegin(GL_LINES);
 
