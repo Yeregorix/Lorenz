@@ -59,6 +59,7 @@ public class UserInterface extends BorderPane {
 
 	public UserInterface() {
 		this.glPane.offscreen.addGLEventListener(new Renderer(this.camera, this.chart));
+		this.glPane.setRenderMode(2);
 		this.controller.installMouseListeners(this.glPane);
 
 		this.showDetails.addListener((v, oldV, newV) -> {
