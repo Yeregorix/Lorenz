@@ -62,9 +62,16 @@ public final class Loop {
 		this.nanoPeriod = nano;
 	}
 
+	public double getPrefFrequency() {
+		return 1E9 / (double) getPrefPeriod();
+	}
+
+	public int getPrefPeriod() {
+		return this.nanoPeriod;
+	}
+
 	public double getCurrentFrequency() {
-		int p = getCurrentPeriod();
-		return p == 0 ? 0 : (1E9 / (double) p);
+		return 1E9 / (double) getCurrentPeriod();
 	}
 
 	public int getCurrentPeriod() {

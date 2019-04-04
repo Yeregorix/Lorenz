@@ -26,6 +26,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 import static com.jogamp.opengl.GL.*;
 import static com.jogamp.opengl.GL2ES1.*;
@@ -34,16 +35,22 @@ import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
 public class Renderer implements GLEventListener {
 	private final Camera camera;
 	private final ScatterChart chart;
-	private final GLU glu = new GLU();
+	private final Controller controller;
 
-	public Renderer(Camera camera, ScatterChart chart) {
+	private final GLU glu = new GLU();
+	private final GLUT glut = new GLUT();
+
+	public Renderer(Camera camera, ScatterChart chart, Controller controller) {
 		if (camera == null)
 			throw new IllegalArgumentException("camera");
 		if (chart == null)
 			throw new IllegalArgumentException("chart");
+		if (controller == null)
+			throw new IllegalArgumentException("controller");
 
 		this.camera = camera;
 		this.chart = chart;
+		this.controller = controller;
 	}
 
 	@Override
@@ -76,12 +83,31 @@ public class Renderer implements GLEventListener {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		this.camera.load(gl, this.glu);
+		// 3D Setup
+		gl.glMatrixMode(GL_PROJECTION);
+		gl.glLoadIdentity();
+		this.camera.load3D(this.glu);
+
+		// 3D Render
+		gl.glMatrixMode(GL_MODELVIEW);
+		gl.glLoadIdentity();
 		this.chart.render(gl);
+
+		// 2D Setup
+		gl.glMatrixMode(GL_PROJECTION);
+		gl.glLoadIdentity();
+		this.camera.load2D(gl);
+
+		// 2D Render
+		gl.glMatrixMode(GL_MODELVIEW);
+		gl.glLoadIdentity();
+		this.controller.render(gl, this.glut);
 	}
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glViewport(0, 0, width, height);
 		this.camera.setWidth(width);
 		this.camera.setHeight(height);
 	}

@@ -26,6 +26,7 @@ import com.jogamp.opengl.GL2;
 import javafx.scene.paint.Color;
 import net.smoofyuniverse.lorenz.math.Series;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,9 +70,13 @@ public class ScatterChart {
 			Color c = s.getColor();
 			gl.glColor4f((float) c.getRed(), (float) c.getGreen(), (float) c.getBlue(), (float) c.getOpacity());
 
+			FloatBuffer buffer = s.getCachedBuffer();
+			if (buffer.capacity() == 0)
+				continue;
+
 			gl.glEnableClientState(GL_VERTEX_ARRAY);
-			gl.glVertexPointer(3, GL_FLOAT, 0, s.getCachedBuffer());
-			gl.glDrawArrays(s.connect ? GL_LINE_STRIP : GL_POINTS, 0, s.size());
+			gl.glVertexPointer(3, GL_FLOAT, 0, buffer);
+			gl.glDrawArrays(s.connect ? GL_LINE_STRIP : GL_POINTS, 0, buffer.capacity() / 3);
 			gl.glDisableClientState(GL_VERTEX_ARRAY);
 		}
 	}

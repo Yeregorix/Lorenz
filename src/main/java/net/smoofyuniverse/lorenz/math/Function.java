@@ -25,6 +25,7 @@ package net.smoofyuniverse.lorenz.math;
 import net.smoofyuniverse.lorenz.math.vector.Vector3d;
 
 public interface Function {
+	double DEFAULT_SIGMA = 10, DEFAULT_RHO = 28, DEFAULT_BETA = 8 / 3D;
 
 	default void apply(Vector3d input, Vector3d output) {
 		apply(input.x, input.y, input.z, output);
@@ -33,7 +34,7 @@ public interface Function {
 	void apply(double x, double y, double z, Vector3d output);
 
 	static Function lorenz() {
-		return lorenz(10, 28, 8 / 3D);
+		return lorenz(DEFAULT_SIGMA, DEFAULT_RHO, DEFAULT_BETA);
 	}
 
 	static Function lorenz(double sigma, double rho, double beta) {

@@ -27,9 +27,6 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.math.FloatUtil;
 import net.smoofyuniverse.lorenz.math.vector.Vector3f;
 
-import static com.jogamp.opengl.GL2.GL_MODELVIEW;
-import static com.jogamp.opengl.GL2.GL_PROJECTION;
-
 public final class Camera {
 	public static final float MIN_FOV = 1, MAX_FOV = 80, DEFAULT_FOV = 50;
 
@@ -39,16 +36,13 @@ public final class Camera {
 	private float posX, posY, posZ;
 	private float[] left = {-1, 0, 0}, up = {0, 1, 0}, forward = {0, 0, 1};
 
-	public void load(GL2 gl, GLU glu) {
-		gl.glViewport(0, 0, this.width, this.height);
-
-		gl.glMatrixMode(GL_PROJECTION);
-		gl.glLoadIdentity();
+	public void load3D(GLU glu) {
 		glu.gluPerspective(this.fov, this.width / (float) this.height, 0.01f, 1000f);
 		glu.gluLookAt(this.posX, this.posY, this.posZ, this.posX + this.forward[0], this.posY + this.forward[1], this.posZ + this.forward[2], this.up[0], this.up[1], this.up[2]);
+	}
 
-		gl.glMatrixMode(GL_MODELVIEW);
-		gl.glLoadIdentity();
+	public void load2D(GL2 gl) {
+		gl.glOrtho(0, this.width, this.height, 0, -1, 1);
 	}
 
 	public int getWidth() {

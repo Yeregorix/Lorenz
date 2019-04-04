@@ -20,15 +20,30 @@
  * SOFTWARE.
  */
 
-package net.smoofyuniverse.lorenz.util.glfx;
+package net.smoofyuniverse.lorenz.ui.gl;
 
-import com.jogamp.opengl.GL2;
-import javafx.scene.image.Image;
+import com.jogamp.opengl.GLAutoDrawable;
+import net.smoofyuniverse.lorenz.util.Updatable;
 
-public interface GLFXImageWriter {
-	void setDimensions(int width, int height);
+public class Animator implements Updatable {
+	public final GLAutoDrawable drawable;
 
-	void doScreenshot(GL2 gl);
+	public Animator(GLAutoDrawable drawable) {
+		this.drawable = drawable;
+	}
 
-	Image getImage();
+	@Override
+	public void init() {
+		this.drawable.setExclusiveContextThread(Thread.currentThread());
+	}
+
+	@Override
+	public void update() {
+		this.drawable.display();
+	}
+
+	@Override
+	public void dispose() {
+		this.drawable.destroy();
+	}
 }

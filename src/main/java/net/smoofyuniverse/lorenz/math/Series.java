@@ -31,8 +31,10 @@ import java.nio.FloatBuffer;
 import java.util.Arrays;
 
 public final class Series {
+	public static final Color DEFAULT_COLOR = Color.color(1, 1, 1, 0.8);
+
 	public boolean connect = true;
-	private Color color = Color.color(1, 1, 1, 0.9);
+	private Color color = DEFAULT_COLOR;
 	private float[] points = new float[81];
 	private int size = 0;
 	private FloatBuffer cachedBuffer;
