@@ -31,7 +31,6 @@ import net.smoofyuniverse.common.app.App;
 import net.smoofyuniverse.common.app.Application;
 import net.smoofyuniverse.common.app.Arguments;
 import net.smoofyuniverse.lorenz.ui.fx.UserInterface;
-import net.smoofyuniverse.lorenz.ui.fx.config.LorenzConfig;
 import net.smoofyuniverse.lorenz.ui.gl.*;
 import net.smoofyuniverse.lorenz.util.Loop;
 
@@ -91,17 +90,11 @@ public class Lorenz extends Application {
 		this.processingLoop.start();
 
 		App.runLater(() -> {
-			initStage(800, 600, true, "favicon.png");
-			setScene(new UserInterface()).show();
+			initStage(700, 600, true, "favicon.png");
+			setScene(new UserInterface(this.processingLoop, this.chart)).show();
 		});
 
 		checkForUpdate();
-
-		LorenzConfig cfg = new LorenzConfig();
-		cfg.points.set(1000000);
-		this.chart.data.add(cfg.series);
-		this.processingLoop.updatables.add(cfg);
-		cfg.start(1000);
 	}
 
 	public static void main(String[] args) {

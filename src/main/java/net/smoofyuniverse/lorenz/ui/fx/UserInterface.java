@@ -22,11 +22,53 @@
 
 package net.smoofyuniverse.lorenz.ui.fx;
 
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import net.smoofyuniverse.common.util.GridUtil;
+import net.smoofyuniverse.lorenz.ui.fx.config.LorenzConfig;
+import net.smoofyuniverse.lorenz.ui.fx.config.LorenzConfigList;
+import net.smoofyuniverse.lorenz.ui.gl.ScatterChart;
+import net.smoofyuniverse.lorenz.util.Loop;
 
 public class UserInterface extends GridPane {
+	private final Loop processingLoop;
+	private final ScatterChart chart;
 
-	public UserInterface() {
+	public UserInterface(Loop processingLoop, ScatterChart chart) {
+		if (processingLoop == null)
+			throw new IllegalArgumentException("processingLoop");
+		if (chart == null)
+			throw new IllegalArgumentException("chart");
 
+		this.processingLoop = processingLoop;
+		this.chart = chart;
+
+		Button add = new Button("Ajouter"), clear = new Button("Vider"), calculate = new Button("Calculer");
+		LorenzConfigList list = new LorenzConfigList();
+
+		LorenzConfig cfg = new LorenzConfig();
+		cfg.points.set(1000000);
+		this.chart.data.add(cfg.series);
+		this.processingLoop.updatables.add(cfg);
+		cfg.start(1000);
+		list.getItems().add(cfg);
+
+		add.setMaxWidth(Double.MAX_VALUE);
+		clear.setMaxWidth(Double.MAX_VALUE);
+		calculate.setMaxWidth(Double.MAX_VALUE);
+
+		add(list, 0, 0, 3, 1);
+		add(add, 0, 1);
+		add(clear, 1, 1);
+		add(calculate, 2, 1);
+
+		setVgap(5);
+		setHgap(5);
+		setPadding(new Insets(8));
+
+		getColumnConstraints().addAll(GridUtil.createColumn(33), GridUtil.createColumn(33), GridUtil.createColumn(33));
+		getRowConstraints().addAll(GridUtil.createRow(Priority.ALWAYS), GridUtil.createRow());
 	}
 }

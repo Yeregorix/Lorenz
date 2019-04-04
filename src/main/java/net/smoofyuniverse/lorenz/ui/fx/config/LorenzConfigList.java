@@ -48,46 +48,40 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 		public LorenzConfigCell() {
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
-			Button remove = new Button("Remove");
-			remove.setOnAction(e -> getItems().remove(getIndex()));
+			Button remove = new Button("Retirer");
+			//	remove.setOnAction(e -> getItems().remove(getIndex()));
 
 			remove.setMaxWidth(Double.MAX_VALUE);
+			remove.setPrefWidth(100);
 			this.color.setMaxWidth(Double.MAX_VALUE);
-			this.sigma.setMaxWidth(Double.MAX_VALUE);
-			this.rho.setMaxWidth(Double.MAX_VALUE);
-			this.beta.setMaxWidth(Double.MAX_VALUE);
-			this.x0.setMaxWidth(Double.MAX_VALUE);
-			this.y0.setMaxWidth(Double.MAX_VALUE);
-			this.z0.setMaxWidth(Double.MAX_VALUE);
-			this.h.setMaxWidth(Double.MAX_VALUE);
-			this.points.setMaxWidth(Double.MAX_VALUE);
+			this.color.setPrefWidth(100);
 
-			this.pane.add(remove, 0, 0);
-			this.pane.add(this.color, 1, 0);
-			this.pane.add(new Label("Pas:"), 2, 0);
-			this.pane.add(this.h, 3, 0);
-			this.pane.add(new Label("Points:"), 4, 0);
-			this.pane.add(this.points, 5, 0);
+			this.pane.add(remove, 0, 0, 2, 1);
+			this.pane.add(this.color, 2, 0);
+			this.pane.add(new Label("Pas:"), 3, 0);
+			this.pane.add(this.h, 4, 0);
+			this.pane.add(new Label("Points:"), 5, 0);
+			this.pane.add(this.points, 6, 0);
 
 			this.pane.add(new Label("σ:"), 0, 1);
-			this.pane.add(this.sigma, 1, 1);
-			this.pane.add(new Label("ρ:"), 2, 1);
-			this.pane.add(this.rho, 3, 1);
-			this.pane.add(new Label("β:"), 4, 1);
-			this.pane.add(this.beta, 5, 1);
+			this.pane.add(this.sigma, 1, 1, 2, 1);
+			this.pane.add(new Label("ρ:"), 3, 1);
+			this.pane.add(this.rho, 4, 1);
+			this.pane.add(new Label("β:"), 5, 1);
+			this.pane.add(this.beta, 6, 1);
 
 			this.pane.add(new Label("x0"), 0, 2);
-			this.pane.add(this.x0, 1, 2);
-			this.pane.add(new Label("y0:"), 2, 2);
-			this.pane.add(this.y0, 3, 2);
-			this.pane.add(new Label("z0:"), 4, 2);
-			this.pane.add(this.z0, 5, 2);
+			this.pane.add(this.x0, 1, 2, 2, 1);
+			this.pane.add(new Label("y0:"), 3, 2);
+			this.pane.add(this.y0, 4, 2);
+			this.pane.add(new Label("z0:"), 5, 2);
+			this.pane.add(this.z0, 6, 2);
 
 			this.pane.setVgap(5);
 			this.pane.setHgap(5);
 
-			this.pane.getColumnConstraints().addAll(GridUtil.createColumn(10), GridUtil.createColumn(23), GridUtil.createColumn(10), GridUtil.createColumn(23), GridUtil.createColumn(10), GridUtil.createColumn(23));
-			this.pane.getRowConstraints().addAll(GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow());
+			this.pane.getColumnConstraints().addAll(GridUtil.createColumn(10), GridUtil.createColumn(10), GridUtil.createColumn(20), GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30));
+			this.pane.getRowConstraints().addAll(GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow());
 		}
 
 		@Override
