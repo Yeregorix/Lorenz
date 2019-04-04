@@ -43,7 +43,7 @@ public class Lorenz extends Application {
 	private Controller controller;
 
 	public Lorenz(Arguments args) {
-		super(args, "Lorenz", "1.0.0");
+		super(args, "Lorenz", "1.0.1");
 	}
 
 	@Override
