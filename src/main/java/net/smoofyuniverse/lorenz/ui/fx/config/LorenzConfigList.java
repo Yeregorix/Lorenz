@@ -43,10 +43,22 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 		private final IntegerField points = new IntegerField(0, 10_000_000), speed = new IntegerField(1, 10000);
 
 		private final GridPane pane = new GridPane();
-		private LorenzConfig currentConfig;
 
 		public LorenzConfigCell() {
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+
+			this.color.valueProperty().addListener((v, oldV, newV) -> getItem().series.setColor(newV));
+
+			this.sigma.valueProperty().addListener((v, oldV, newV) -> getItem().sigma = newV.doubleValue());
+			this.rho.valueProperty().addListener((v, oldV, newV) -> getItem().rho = newV.doubleValue());
+			this.beta.valueProperty().addListener((v, oldV, newV) -> getItem().beta = newV.doubleValue());
+			this.x0.valueProperty().addListener((v, oldV, newV) -> getItem().x0 = newV.doubleValue());
+			this.y0.valueProperty().addListener((v, oldV, newV) -> getItem().y0 = newV.doubleValue());
+			this.z0.valueProperty().addListener((v, oldV, newV) -> getItem().z0 = newV.doubleValue());
+			this.h.valueProperty().addListener((v, oldV, newV) -> getItem().h = newV.doubleValue());
+
+			this.points.valueProperty().addListener((v, oldV, newV) -> getItem().points = newV.intValue());
+			this.speed.valueProperty().addListener((v, oldV, newV) -> getItem().speed = newV.intValue());
 
 			Button remove = new Button("Retirer");
 			remove.setOnAction(e -> getItems().remove(getIndex()));
@@ -90,46 +102,27 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 		@Override
 		public void updateIndex(int index) {
 			super.updateIndex(index);
-			unbindContent();
 			setGraphic(index == -1 || isEmpty() ? null : updateContent());
-		}
-
-		private void unbindContent() {
-			if (this.currentConfig != null) {
-				this.color.valueProperty().unbindBidirectional(this.currentConfig.color);
-				this.sigma.valueProperty().unbindBidirectional(this.currentConfig.sigma);
-				this.rho.valueProperty().unbindBidirectional(this.currentConfig.rho);
-				this.beta.valueProperty().unbindBidirectional(this.currentConfig.beta);
-				this.x0.valueProperty().unbindBidirectional(this.currentConfig.x0);
-				this.y0.valueProperty().unbindBidirectional(this.currentConfig.y0);
-				this.z0.valueProperty().unbindBidirectional(this.currentConfig.z0);
-				this.h.valueProperty().unbindBidirectional(this.currentConfig.h);
-				this.points.valueProperty().unbindBidirectional(this.currentConfig.points);
-				this.speed.valueProperty().unbindBidirectional(this.currentConfig.speed);
-				this.currentConfig = null;
-			}
 		}
 
 		private Node updateContent() {
 			LorenzConfig item = getItem();
-			this.color.valueProperty().bindBidirectional(item.color);
-			this.sigma.valueProperty().bindBidirectional(item.sigma);
-			this.rho.valueProperty().bindBidirectional(item.rho);
-			this.beta.valueProperty().bindBidirectional(item.beta);
-			this.x0.valueProperty().bindBidirectional(item.x0);
-			this.y0.valueProperty().bindBidirectional(item.y0);
-			this.z0.valueProperty().bindBidirectional(item.z0);
-			this.h.valueProperty().bindBidirectional(item.h);
-			this.points.valueProperty().bindBidirectional(item.points);
-			this.speed.valueProperty().bindBidirectional(item.speed);
-			this.currentConfig = item;
+			this.color.setValue(item.series.getColor());
+			this.sigma.setValue(item.sigma);
+			this.rho.setValue(item.rho);
+			this.beta.setValue(item.beta);
+			this.x0.setValue(item.x0);
+			this.y0.setValue(item.y0);
+			this.z0.setValue(item.z0);
+			this.h.setValue(item.h);
+			this.points.setValue(item.points);
+			this.speed.setValue(item.speed);
 			return this.pane;
 		}
 
 		@Override
 		protected void updateItem(LorenzConfig item, boolean empty) {
 			super.updateItem(item, empty);
-			unbindContent();
 			setGraphic(getIndex() == -1 || empty ? null : updateContent());
 		}
 	}

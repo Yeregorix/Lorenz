@@ -22,8 +22,6 @@
 
 package net.smoofyuniverse.lorenz.ui.fx.config;
 
-import javafx.beans.property.*;
-import javafx.scene.paint.Color;
 import net.smoofyuniverse.common.task.IncrementalListener;
 import net.smoofyuniverse.common.task.impl.SimpleIncrementalListener;
 import net.smoofyuniverse.lorenz.math.Function;
@@ -33,25 +31,19 @@ import net.smoofyuniverse.lorenz.math.vector.Vector3d;
 import net.smoofyuniverse.lorenz.util.Updatable;
 
 public final class LorenzConfig implements Updatable {
-	public final ObjectProperty<Color> color = new SimpleObjectProperty<>(Series.DEFAULT_COLOR);
-	public final DoubleProperty sigma = new SimpleDoubleProperty(Function.DEFAULT_SIGMA), rho = new SimpleDoubleProperty(Function.DEFAULT_RHO), beta = new SimpleDoubleProperty(Function.DEFAULT_BETA),
-			x0 = new SimpleDoubleProperty(1), y0 = new SimpleDoubleProperty(1), z0 = new SimpleDoubleProperty(1), h = new SimpleDoubleProperty(0.001);
-	public final IntegerProperty points = new SimpleIntegerProperty(100000), speed = new SimpleIntegerProperty(100);
+	public double sigma = Function.DEFAULT_SIGMA, rho = Function.DEFAULT_RHO, beta = Function.DEFAULT_BETA, x0 = 1, y0 = 1, z0 = 1, h = 0.001;
+	public int points = 100000, speed = 100;
 
 	public final Series series = new Series();
 
 	private IncrementalListener listener;
 	private Updatable solver;
 
-	public LorenzConfig() {
-		this.color.addListener((v, oldV, newV) -> this.series.setColor(newV));
-	}
-
 	public void start() {
 		stop();
 
-		this.listener = new SimpleIncrementalListener(this.points.get());
-		this.solver = new RungeKutta4(new Vector3d(this.x0.get(), this.y0.get(), this.z0.get()), this.h.get(), Function.lorenz(this.sigma.get(), this.rho.get(), this.beta.get()), this.series, this.listener, this.speed.get());
+		this.listener = new SimpleIncrementalListener(this.points);
+		this.solver = new RungeKutta4(new Vector3d(this.x0, this.y0, this.z0), this.h, Function.lorenz(this.sigma, this.rho, this.beta), this.series, this.listener, this.speed);
 		this.solver.init();
 	}
 
