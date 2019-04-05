@@ -22,6 +22,7 @@
 
 package net.smoofyuniverse.lorenz.ui.fx;
 
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -33,8 +34,6 @@ import net.smoofyuniverse.lorenz.ui.gl.ScatterChart;
 import net.smoofyuniverse.lorenz.util.Loop;
 
 public class UserInterface extends GridPane {
-	private final Loop processingLoop;
-	private final ScatterChart chart;
 
 	public UserInterface(Loop processingLoop, ScatterChart chart) {
 		if (processingLoop == null)
@@ -42,18 +41,30 @@ public class UserInterface extends GridPane {
 		if (chart == null)
 			throw new IllegalArgumentException("chart");
 
-		this.processingLoop = processingLoop;
-		this.chart = chart;
-
 		Button add = new Button("Ajouter"), clear = new Button("Vider"), calculate = new Button("Calculer");
 		LorenzConfigList list = new LorenzConfigList();
 
-		LorenzConfig cfg = new LorenzConfig();
-		cfg.points.set(1000000);
-		this.chart.data.add(cfg.series);
-		this.processingLoop.updatables.add(cfg);
-		cfg.start(1000);
-		list.getItems().add(cfg);
+		list.getItems().addListener((ListChangeListener<LorenzConfig>) c -> {
+			while (c.next()) {
+				for (LorenzConfig cfg : c.getRemoved()) {
+					cfg.stop();
+					processingLoop.updatables.remove(cfg);
+					chart.data.remove(cfg.series);
+				}
+
+				for (LorenzConfig cfg : c.getAddedSubList()) {
+					chart.data.add(cfg.series);
+					processingLoop.updatables.add(cfg);
+				}
+			}
+		});
+
+		add.setOnAction(e -> list.getItems().add(new LorenzConfig()));
+		clear.setOnAction(e -> list.getItems().clear());
+		calculate.setOnAction(e -> {
+			for (LorenzConfig cfg : list.getItems())
+				cfg.start();
+		});
 
 		add.setMaxWidth(Double.MAX_VALUE);
 		clear.setMaxWidth(Double.MAX_VALUE);

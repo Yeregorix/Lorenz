@@ -36,7 +36,7 @@ public final class LorenzConfig implements Updatable {
 	public final ObjectProperty<Color> color = new SimpleObjectProperty<>(Series.DEFAULT_COLOR);
 	public final DoubleProperty sigma = new SimpleDoubleProperty(Function.DEFAULT_SIGMA), rho = new SimpleDoubleProperty(Function.DEFAULT_RHO), beta = new SimpleDoubleProperty(Function.DEFAULT_BETA),
 			x0 = new SimpleDoubleProperty(1), y0 = new SimpleDoubleProperty(1), z0 = new SimpleDoubleProperty(1), h = new SimpleDoubleProperty(0.001);
-	public final IntegerProperty points = new SimpleIntegerProperty(100000);
+	public final IntegerProperty points = new SimpleIntegerProperty(100000), speed = new SimpleIntegerProperty(100);
 
 	public final Series series = new Series();
 
@@ -48,14 +48,10 @@ public final class LorenzConfig implements Updatable {
 	}
 
 	public void start() {
-		start(100);
-	}
-
-	public void start(int iterationsPerUpdate) {
 		stop();
 
 		this.listener = new SimpleIncrementalListener(this.points.get());
-		this.solver = new RungeKutta4(new Vector3d(this.x0.get(), this.y0.get(), this.z0.get()), this.h.get(), Function.lorenz(this.sigma.get(), this.rho.get(), this.beta.get()), this.series, this.listener, iterationsPerUpdate);
+		this.solver = new RungeKutta4(new Vector3d(this.x0.get(), this.y0.get(), this.z0.get()), this.h.get(), Function.lorenz(this.sigma.get(), this.rho.get(), this.beta.get()), this.series, this.listener, this.speed.get());
 		this.solver.init();
 	}
 
