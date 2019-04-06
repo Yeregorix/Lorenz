@@ -29,6 +29,7 @@ import net.smoofyuniverse.common.fxui.field.DoubleField;
 import net.smoofyuniverse.common.fxui.field.IntegerField;
 import net.smoofyuniverse.common.util.GridUtil;
 import net.smoofyuniverse.lorenz.math.Function;
+import net.smoofyuniverse.lorenz.math.Series;
 
 public final class LorenzConfigList extends ListView<LorenzConfig> {
 
@@ -41,6 +42,7 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 		private final DoubleField sigma = new DoubleField(-1000, 1000, Function.DEFAULT_SIGMA), rho = new DoubleField(-1000, 1000, Function.DEFAULT_RHO), beta = new DoubleField(-1000, 1000, Function.DEFAULT_BETA),
 				x0 = new DoubleField(-1000, 1000, 0), y0 = new DoubleField(-1000, 1000, 0), z0 = new DoubleField(-1000, 1000, 0), h = new DoubleField(0, 10, 0.001);
 		private final IntegerField points = new IntegerField(0, 10_000_000), speed = new IntegerField(1, 10000);
+		private final Button connect = new Button();
 
 		private final GridPane pane = new GridPane();
 
@@ -60,42 +62,57 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 			this.points.valueProperty().addListener((v, oldV, newV) -> getItem().points = newV.intValue());
 			this.speed.valueProperty().addListener((v, oldV, newV) -> getItem().speed = newV.intValue());
 
+			this.connect.setOnAction(e -> {
+				Series s = getItem().series;
+				if (s.connect) {
+					s.connect = false;
+					this.connect.setText("Connecter");
+				} else {
+					s.connect = true;
+					this.connect.setText("Déconnecter");
+				}
+			});
+
 			Button remove = new Button("Retirer");
 			remove.setOnAction(e -> getItems().remove(getIndex()));
 
 			remove.setMaxWidth(Double.MAX_VALUE);
 			remove.setPrefWidth(100);
+			this.connect.setMaxWidth(Double.MAX_VALUE);
+			this.connect.setPrefWidth(100);
 			this.color.setMaxWidth(Double.MAX_VALUE);
 			this.color.setPrefWidth(100);
 
-			this.pane.add(remove, 0, 0, 2, 1);
-			this.pane.add(this.color, 2, 0);
+			this.pane.add(new Label("Couleur:"), 0, 0);
+			this.pane.add(this.color, 1, 0);
+			this.pane.add(this.connect, 3, 0);
+			this.pane.add(remove, 5, 0);
 
 			this.pane.add(new Label("Pas:"), 0, 1);
-			this.pane.add(this.h, 1, 1, 2, 1);
-			this.pane.add(new Label("Points:"), 3, 1);
-			this.pane.add(this.points, 4, 1);
-			this.pane.add(new Label("Vitesse:"), 5, 1);
-			this.pane.add(this.speed, 6, 1);
+			this.pane.add(this.h, 1, 1);
+			this.pane.add(new Label("Points:"), 2, 1);
+			this.pane.add(this.points, 3, 1);
+			this.pane.add(new Label("Vitesse:"), 4, 1);
+			this.pane.add(this.speed, 5, 1);
 
 			this.pane.add(new Label("σ:"), 0, 2);
-			this.pane.add(this.sigma, 1, 2, 2, 1);
-			this.pane.add(new Label("ρ:"), 3, 2);
-			this.pane.add(this.rho, 4, 2);
-			this.pane.add(new Label("β:"), 5, 2);
-			this.pane.add(this.beta, 6, 2);
+			this.pane.add(this.sigma, 1, 2);
+			this.pane.add(new Label("ρ:"), 2, 2);
+			this.pane.add(this.rho, 3, 2);
+			this.pane.add(new Label("β:"), 4, 2);
+			this.pane.add(this.beta, 5, 2);
 
 			this.pane.add(new Label("x0"), 0, 3);
-			this.pane.add(this.x0, 1, 3, 2, 1);
-			this.pane.add(new Label("y0:"), 3, 3);
-			this.pane.add(this.y0, 4, 3);
-			this.pane.add(new Label("z0:"), 5, 3);
-			this.pane.add(this.z0, 6, 3);
+			this.pane.add(this.x0, 1, 3);
+			this.pane.add(new Label("y0:"), 2, 3);
+			this.pane.add(this.y0, 3, 3);
+			this.pane.add(new Label("z0:"), 4, 3);
+			this.pane.add(this.z0, 5, 3);
 
 			this.pane.setVgap(5);
 			this.pane.setHgap(5);
 
-			this.pane.getColumnConstraints().addAll(GridUtil.createColumn(10), GridUtil.createColumn(10), GridUtil.createColumn(20), GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30));
+			this.pane.getColumnConstraints().addAll(GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30));
 			this.pane.getRowConstraints().addAll(GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow());
 		}
 
@@ -107,6 +124,7 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 
 		private Node updateContent() {
 			LorenzConfig item = getItem();
+			this.connect.setText(item.series.connect ? "Déconnecter" : "Connecter");
 			this.color.setValue(item.series.getColor());
 			this.sigma.setValue(item.sigma);
 			this.rho.setValue(item.rho);

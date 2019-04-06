@@ -66,22 +66,22 @@ public class ScatterChart {
 		gl.glEnd();
 
 		gl.glLineWidth(1);
-		gl.glPointSize(10);
-
 		for (Series s : this.data) {
-			Color c = s.getColor();
-			gl.glColor4f((float) c.getRed(), (float) c.getGreen(), (float) c.getBlue(), (float) c.getOpacity());
-
 			FloatBuffer buffer = s.getCachedBuffer();
 			int count = buffer.capacity() / 3;
 			if (count == 0)
 				continue;
+
+			Color c = s.getColor();
+			gl.glColor4f((float) c.getRed(), (float) c.getGreen(), (float) c.getBlue(), (float) c.getOpacity());
+			gl.glPointSize(1);
 
 			gl.glEnableClientState(GL_VERTEX_ARRAY);
 			gl.glVertexPointer(3, GL_FLOAT, 0, buffer);
 			gl.glDrawArrays(s.connect ? GL_LINE_STRIP : GL_POINTS, 0, count);
 			gl.glDisableClientState(GL_VERTEX_ARRAY);
 
+			gl.glPointSize(10);
 			gl.glBegin(GL_POINTS);
 			int pos = (count - 1) * 3;
 			gl.glVertex3f(buffer.get(pos), buffer.get(pos + 1), buffer.get(pos + 2));
