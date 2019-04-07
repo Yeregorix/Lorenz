@@ -25,28 +25,31 @@ package net.smoofyuniverse.lorenz.ui.fx.config;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import net.smoofyuniverse.common.fx.control.EmptySelectionModel;
 import net.smoofyuniverse.common.fx.field.DoubleField;
 import net.smoofyuniverse.common.fx.field.IntegerField;
 import net.smoofyuniverse.common.util.GridUtil;
 import net.smoofyuniverse.lorenz.math.Function;
 import net.smoofyuniverse.lorenz.math.Series;
 
-public final class LorenzConfigList extends ListView<LorenzConfig> {
+public class LorenzConfigList extends ListView<LorenzConfig> {
 
 	public LorenzConfigList() {
-		setCellFactory(l -> new LorenzConfigCell());
+		setCellFactory(l -> new ConfigCell());
+		setSelectionModel(new EmptySelectionModel<>());
 	}
 
-	private class LorenzConfigCell extends ListCell<LorenzConfig> {
+	private class ConfigCell extends ListCell<LorenzConfig> {
 		private final ColorPicker color = new ColorPicker();
 		private final DoubleField sigma = new DoubleField(-1000, 1000, Function.DEFAULT_SIGMA), rho = new DoubleField(-1000, 1000, Function.DEFAULT_RHO), beta = new DoubleField(-1000, 1000, Function.DEFAULT_BETA),
 				x0 = new DoubleField(-1000, 1000, 0), y0 = new DoubleField(-1000, 1000, 0), z0 = new DoubleField(-1000, 1000, 0), h = new DoubleField(0, 10, 0.001);
 		private final IntegerField points = new IntegerField(0, 10_000_000), speed = new IntegerField(1, 10000);
 		private final Button connect = new Button();
+		private final ProgressBar progressBar = new ProgressBar();
 
 		private final GridPane pane = new GridPane();
 
-		public LorenzConfigCell() {
+		public ConfigCell() {
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 
 			this.color.valueProperty().addListener((v, oldV, newV) -> getItem().series.setColor(newV));
@@ -83,6 +86,8 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 			this.color.setMaxWidth(Double.MAX_VALUE);
 			this.color.setPrefWidth(100);
 
+			this.progressBar.setMaxWidth(Double.MAX_VALUE);
+
 			this.pane.add(new Label("Couleur:"), 0, 0);
 			this.pane.add(this.color, 1, 0);
 			this.pane.add(this.connect, 3, 0);
@@ -109,17 +114,24 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 			this.pane.add(new Label("z0:"), 4, 3);
 			this.pane.add(this.z0, 5, 3);
 
+			this.pane.add(this.progressBar, 0, 4, 6, 1);
+
 			this.pane.setVgap(5);
 			this.pane.setHgap(5);
 
 			this.pane.getColumnConstraints().addAll(GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30));
-			this.pane.getRowConstraints().addAll(GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow());
+			this.pane.getRowConstraints().addAll(GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow());
 		}
 
 		@Override
 		public void updateIndex(int index) {
 			super.updateIndex(index);
+			unbindContent();
 			setGraphic(index == -1 || isEmpty() ? null : updateContent());
+		}
+
+		private void unbindContent() {
+			this.progressBar.progressProperty().unbind();
 		}
 
 		private Node updateContent() {
@@ -135,12 +147,14 @@ public final class LorenzConfigList extends ListView<LorenzConfig> {
 			this.h.setValue(item.h);
 			this.points.setValue(item.points);
 			this.speed.setValue(item.speed);
+			this.progressBar.progressProperty().bind(item.progressListener.progressProperty());
 			return this.pane;
 		}
 
 		@Override
 		protected void updateItem(LorenzConfig item, boolean empty) {
 			super.updateItem(item, empty);
+			unbindContent();
 			setGraphic(getIndex() == -1 || empty ? null : updateContent());
 		}
 	}

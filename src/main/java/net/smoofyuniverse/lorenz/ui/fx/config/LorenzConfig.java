@@ -22,8 +22,8 @@
 
 package net.smoofyuniverse.lorenz.ui.fx.config;
 
+import net.smoofyuniverse.common.fx.task.ObservableProgressListener;
 import net.smoofyuniverse.common.task.IncrementalListener;
-import net.smoofyuniverse.common.task.impl.SimpleIncrementalListener;
 import net.smoofyuniverse.lorenz.math.Function;
 import net.smoofyuniverse.lorenz.math.RungeKutta4;
 import net.smoofyuniverse.lorenz.math.Series;
@@ -34,6 +34,7 @@ public final class LorenzConfig implements Updatable {
 	public double sigma = Function.DEFAULT_SIGMA, rho = Function.DEFAULT_RHO, beta = Function.DEFAULT_BETA, x0 = 1, y0 = 1, z0 = 1, h = 0.001;
 	public int points = 100000, speed = 100;
 
+	public final ObservableProgressListener progressListener = new ObservableProgressListener();
 	public final Series series = new Series();
 
 	private IncrementalListener listener;
@@ -42,7 +43,8 @@ public final class LorenzConfig implements Updatable {
 	public void start() {
 		stop();
 
-		this.listener = new SimpleIncrementalListener(this.points);
+		this.progressListener.setCancelled(false);
+		this.listener = this.progressListener.limit(this.points);
 		this.solver = new RungeKutta4(new Vector3d(this.x0, this.y0, this.z0), this.h, Function.lorenz(this.sigma, this.rho, this.beta), this.series, this.listener, this.speed);
 		this.solver.init();
 	}
