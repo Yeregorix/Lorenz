@@ -39,10 +39,11 @@ import java.util.List;
 
 import static com.jogamp.newt.event.KeyEvent.*;
 import static com.jogamp.newt.event.MouseEvent.BUTTON1;
-import static com.jogamp.opengl.util.gl2.GLUT.BITMAP_HELVETICA_10;
+import static com.jogamp.opengl.util.gl2.GLUT.BITMAP_HELVETICA_12;
 
 public final class Controller implements Updatable, KeyListener, MouseListener {
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
+	private static final List<String> HELP = new ArrayList<>();
 
 	private final Loop renderLoop;
 	private final Camera camera;
@@ -51,7 +52,7 @@ public final class Controller implements Updatable, KeyListener, MouseListener {
 	private float speed = 1;
 	private double lastX, lastY;
 
-	public boolean displayDebug;
+	public boolean displayDebug, displayHelp;
 
 	public Controller(Loop renderLoop, Camera camera) {
 		if (renderLoop == null)
@@ -65,29 +66,43 @@ public final class Controller implements Updatable, KeyListener, MouseListener {
 
 	public void render(GL2 gl, GLUT glut) {
 		if (this.displayDebug) {
-			gl.glColor3f(1, 1, 1);
-
 			List<String> lines = new ArrayList<>();
 			lines.add("IPS: " + (int) this.renderLoop.getCurrentFrequency() + " / " + (int) this.renderLoop.getPrefFrequency());
 			lines.add("Champ de vision: " + format(this.camera.getFOV()) + "°");
 			lines.add("Position: " + format(this.camera.getPosition()));
 			lines.add("Vitesse: " + format(this.speed));
+			renderString(gl, glut, lines, 0, 0, false);
+		}
 
-			int length = 0;
-			for (String s : lines) {
-				int l = glut.glutBitmapLength(BITMAP_HELVETICA_10, s);
-				if (l > length)
-					length = l;
-			}
+		if (this.displayHelp)
+			renderString(gl, glut, HELP, this.camera.getWidth() / 2, this.camera.getHeight() / 2, true);
+	}
 
-			// TODO gl.glBegin(GL2.FILL);
+	private static void renderString(GL2 gl, GLUT glut, List<String> lines, float x, float y, boolean center) {
+		int max = 0;
+		for (String s : lines) {
+			int length = glut.glutBitmapLength(BITMAP_HELVETICA_12, s);
+			if (length > max)
+				max = length;
+		}
 
-			int y = 20;
-			for (String s : lines) {
-				gl.glRasterPos2f(10, y);
-				glut.glutBitmapString(BITMAP_HELVETICA_10, s);
-				y += 15;
-			}
+		float width = max + 14, height = 17 * lines.size() + 14;
+
+		if (center) {
+			x -= width / 2;
+			y -= height / 2;
+		}
+
+		gl.glColor4f(0.2f, 0.2f, 0.2f, 0.8f);
+		gl.glRectf(x, y, x + width, y + height);
+
+		x += 7;
+		y += 4;
+		gl.glColor3f(1, 1, 1);
+		for (String s : lines) {
+			y += 17;
+			gl.glRasterPos2f(x, y);
+			glut.glutBitmapString(BITMAP_HELVETICA_12, s);
 		}
 	}
 
@@ -155,6 +170,9 @@ public final class Controller implements Updatable, KeyListener, MouseListener {
 		switch (symbol) {
 			case VK_F3:
 				this.displayDebug = !this.displayDebug;
+				break;
+			case VK_H:
+				this.displayHelp = !this.displayHelp;
 				break;
 			case VK_ADD:
 				int maxFps = (int) this.renderLoop.getPrefFrequency();
@@ -301,5 +319,27 @@ public final class Controller implements Updatable, KeyListener, MouseListener {
 		DecimalFormatSymbols dfs = DECIMAL_FORMAT.getDecimalFormatSymbols();
 		dfs.setDecimalSeparator('.');
 		DECIMAL_FORMAT.setDecimalFormatSymbols(dfs);
+
+		HELP.add("H: Afficher ou cacher cette aide.");
+		HELP.add("F3: Afficher ou cacher les détails.");
+		HELP.add("+: Augmenter la limite d'IPS.");
+		HELP.add("-: Diminuer la limite d'IPS.");
+
+		HELP.add("W: Aller à gauche.");
+		HELP.add("C: Aller à droite.");
+		HELP.add("D: Avancer.");
+		HELP.add("X: Reculer.");
+		HELP.add("Espace: Monter.");
+		HELP.add("Shift: Descendre.");
+
+		HELP.add("Flèche avant: Zoomer en avant.");
+		HELP.add("Flèche arrière: Zoomer en arrière.");
+		HELP.add("Flèche droite: Augmenter la vitesse.");
+		HELP.add("Flèche gauche: Diminuer la vitesse.");
+
+		HELP.add("1: Réinitialiser le champ de vision.");
+		HELP.add("2: Réinitialiser la position.");
+		HELP.add("3: Réinitialiser l'orientation.");
+		HELP.add("4: Réinitialiser la vitesse.");
 	}
 }
