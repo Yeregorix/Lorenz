@@ -45,6 +45,7 @@ public final class LorenzConfig implements Updatable {
 
 		this.progressListener.setCancelled(false);
 		this.listener = this.progressListener.limit(this.points);
+		this.series.ensureCapacity(this.points, true);
 		this.solver = new RungeKutta4(new Vector3d(this.x0, this.y0, this.z0), this.h, Function.lorenz(this.sigma, this.rho, this.beta), this.series, this.listener, this.speed);
 		this.solver.init();
 	}

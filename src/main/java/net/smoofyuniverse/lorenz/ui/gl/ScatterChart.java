@@ -27,13 +27,13 @@ import javafx.scene.paint.Color;
 import net.smoofyuniverse.lorenz.math.Series;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.jogamp.opengl.GL2.*;
 
 public class ScatterChart {
-	public final List<Series> data = new ArrayList<>();
+	public final List<Series> data = new CopyOnWriteArrayList<>();
 
 	public void render(GL2 gl) {
 		gl.glLineWidth(2);
@@ -67,10 +67,11 @@ public class ScatterChart {
 
 		gl.glLineWidth(1);
 		for (Series s : this.data) {
-			FloatBuffer buffer = s.getCachedBuffer();
-			int count = buffer.capacity() / 3;
-			if (count == 0)
+			int size = s.size();
+			if (size == 0)
 				continue;
+
+			FloatBuffer buffer = s.getBuffer();
 
 			Color c = s.getColor();
 			gl.glColor4f((float) c.getRed(), (float) c.getGreen(), (float) c.getBlue(), (float) c.getOpacity());
@@ -78,12 +79,12 @@ public class ScatterChart {
 
 			gl.glEnableClientState(GL_VERTEX_ARRAY);
 			gl.glVertexPointer(3, GL_FLOAT, 0, buffer);
-			gl.glDrawArrays(s.connect ? GL_LINE_STRIP : GL_POINTS, 0, count);
+			gl.glDrawArrays(s.connect ? GL_LINE_STRIP : GL_POINTS, 0, size);
 			gl.glDisableClientState(GL_VERTEX_ARRAY);
 
 			gl.glPointSize(10);
 			gl.glBegin(GL_POINTS);
-			int pos = (count - 1) * 3;
+			int pos = (size - 1) * 3;
 			gl.glVertex3f(buffer.get(pos), buffer.get(pos + 1), buffer.get(pos + 2));
 			gl.glEnd();
 		}
