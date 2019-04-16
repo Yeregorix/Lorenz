@@ -37,7 +37,7 @@ public final class Camera {
 	private float[] left = {-1, 0, 0}, up = {0, 1, 0}, forward = {0, 0, 1};
 
 	public void load3D(GLU glu) {
-		glu.gluPerspective(this.fov, this.width / (float) this.height, 0.01f, 1000f);
+		glu.gluPerspective(this.fov, this.width / (float) this.height, 0.01f, 10000f);
 		glu.gluLookAt(this.posX, this.posY, this.posZ, this.posX + this.forward[0], this.posY + this.forward[1], this.posZ + this.forward[2], this.up[0], this.up[1], this.up[2]);
 	}
 

@@ -41,8 +41,8 @@ public class LorenzConfigList extends ListView<LorenzConfig> {
 
 	private class ConfigCell extends ListCell<LorenzConfig> {
 		private final ColorPicker color = new ColorPicker();
-		private final DoubleField sigma = new DoubleField(-1000, 1000, Function.DEFAULT_SIGMA), rho = new DoubleField(-1000, 1000, Function.DEFAULT_RHO), beta = new DoubleField(-1000, 1000, Function.DEFAULT_BETA),
-				x0 = new DoubleField(-1000, 1000, 0), y0 = new DoubleField(-1000, 1000, 0), z0 = new DoubleField(-1000, 1000, 0), h = new DoubleField(0, 10, 0.001);
+		private final DoubleField sigma = new DoubleField(-10000, 10000, Function.DEFAULT_SIGMA), rho = new DoubleField(-10000, 10000, Function.DEFAULT_RHO), beta = new DoubleField(-10000, 10000, Function.DEFAULT_BETA),
+				x0 = new DoubleField(-10000, 10000, 0), y0 = new DoubleField(-10000, 10000, 0), z0 = new DoubleField(-10000, 10000, 0), h = new DoubleField(-10, 10, 0.001);
 		private final IntegerField points = new IntegerField(0, 10_000_000), speed = new IntegerField(1, 10000);
 		private final Button connect = new Button();
 		private final ProgressBar progressBar = new ProgressBar();
