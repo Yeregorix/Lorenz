@@ -30,6 +30,7 @@ import com.jogamp.opengl.GLProfile;
 import net.smoofyuniverse.common.app.App;
 import net.smoofyuniverse.common.app.Application;
 import net.smoofyuniverse.common.app.Arguments;
+import net.smoofyuniverse.common.environment.source.GithubReleaseSource;
 import net.smoofyuniverse.lorenz.ui.fx.UserInterface;
 import net.smoofyuniverse.lorenz.ui.gl.*;
 import net.smoofyuniverse.lorenz.util.Loop;
@@ -50,6 +51,7 @@ public class Lorenz extends Application {
 	public void init() throws Exception {
 		requireUI();
 		initServices(Executors.newCachedThreadPool());
+		updateEnvironment(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
 
 		this.renderLoop = new Loop();
 		this.controlLoop = new Loop();
@@ -93,8 +95,6 @@ public class Lorenz extends Application {
 			initStage(700, 600, true, "favicon.png");
 			setScene(new UserInterface(this.processingLoop, this.chart)).show();
 		});
-
-		checkForUpdate();
 	}
 
 	public static void main(String[] args) {
