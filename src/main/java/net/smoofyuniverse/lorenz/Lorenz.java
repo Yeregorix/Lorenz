@@ -22,26 +22,18 @@
 
 package net.smoofyuniverse.lorenz;
 
-import com.jogamp.newt.event.WindowAdapter;
-import com.jogamp.newt.event.WindowEvent;
-import com.jogamp.newt.opengl.GLWindow;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
 import net.smoofyuniverse.common.app.App;
 import net.smoofyuniverse.common.app.Application;
 import net.smoofyuniverse.common.app.Arguments;
+import net.smoofyuniverse.common.app.OperatingSystem;
+import net.smoofyuniverse.common.environment.DependencyInfo;
 import net.smoofyuniverse.common.environment.source.GithubReleaseSource;
-import net.smoofyuniverse.lorenz.ui.fx.UserInterface;
-import net.smoofyuniverse.lorenz.ui.gl.*;
-import net.smoofyuniverse.lorenz.util.Loop;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class Lorenz extends Application {
-	private Loop renderLoop, controlLoop, processingLoop;
-	private Camera camera;
-	private ScatterChart chart;
-	private Controller controller;
 
 	public Lorenz(Arguments args) {
 		super(args, "Lorenz", "1.0.5");
@@ -52,56 +44,30 @@ public class Lorenz extends Application {
 		requireUI();
 		initServices(Executors.newCachedThreadPool());
 		updateEnvironment(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
+		if (!this.devEnvironment) {
+			List<DependencyInfo> list = new LinkedList<>();
+			Libraries.get(OperatingSystem.CURRENT, list);
 
-		this.renderLoop = new Loop();
-		this.controlLoop = new Loop();
-		this.processingLoop = new Loop();
-		this.camera = new Camera();
-		this.chart = new ScatterChart();
-		this.controller = new Controller(this.renderLoop, this.camera);
-
-		GLProfile glp = GLProfile.getDefault();
-		GLCapabilities caps = new GLCapabilities(glp);
-		caps.setDoubleBuffered(false);
-		GLWindow window = GLWindow.create(caps);
-
-		window.addKeyListener(this.controller);
-		window.addMouseListener(this.controller);
-		window.addGLEventListener(new Renderer(this.camera, this.chart, this.controller));
-
-		window.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowDestroyNotify(WindowEvent e) {
+			List<DependencyInfo> temp = new LinkedList<>(list);
+			updateDependencies(this.workingDir.resolve("libraries"), temp);
+			if (!temp.isEmpty()) {
 				shutdown();
+				return;
 			}
-		});
 
-		window.setSize(1000, 800);
-		window.setTitle(this.title + " " + this.version);
-		window.setVisible(true);
+			loadDependencies(list);
+		}
 
-		this.renderLoop.setPrefFrequency(60);
-		this.controlLoop.setPrefFrequency(30);
-		this.processingLoop.setPrefFrequency(30);
-
-		this.renderLoop.updatables.add(new Animator(window));
-		this.controlLoop.updatables.add(this.controller);
-
-		this.renderLoop.start();
-		this.controlLoop.start();
-		this.processingLoop.start();
+		Manager manager = new Manager(this);
+		manager.start();
 
 		App.runLater(() -> {
 			initStage(700, 600, true, "favicon.png");
-			setScene(new UserInterface(this.processingLoop, this.chart)).show();
+			setScene(manager.createUI()).show();
 		});
 	}
 
 	public static void main(String[] args) {
 		new Lorenz(Arguments.parse(args)).launch();
-	}
-
-	public static Lorenz get() {
-		return (Lorenz) Application.get();
 	}
 }
