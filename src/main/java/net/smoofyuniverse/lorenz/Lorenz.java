@@ -43,7 +43,7 @@ public class Lorenz extends Application {
 	public void init() throws Exception {
 		requireUI();
 		initServices(Executors.newCachedThreadPool());
-		updateEnvironment(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
+		updateApplication(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
 		if (!this.devEnvironment) {
 			List<DependencyInfo> list = new LinkedList<>();
 			Libraries.get(OperatingSystem.CURRENT, list);
