@@ -36,14 +36,14 @@ import java.util.concurrent.Executors;
 public class Lorenz extends Application {
 
 	public Lorenz(Arguments args) {
-		super(args, "Lorenz", "1.0.6");
+		super(args, "Lorenz", "1.0.7");
 	}
 
 	@Override
 	public void init() throws Exception {
 		requireUI();
 		initServices(Executors.newCachedThreadPool());
-		updateApplication(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
+		tryUpdateApplication(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
 		if (!this.devEnvironment) {
 			List<DependencyInfo> list = new LinkedList<>();
 			Libraries.get(OperatingSystem.CURRENT, list);
