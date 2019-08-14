@@ -43,7 +43,7 @@ public class Lorenz extends Application {
 	public void init() throws Exception {
 		requireUI();
 		initServices(Executors.newCachedThreadPool());
-		tryUpdateApplication(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
+
 		if (!this.devEnvironment) {
 			List<DependencyInfo> list = new LinkedList<>();
 			Libraries.get(OperatingSystem.CURRENT, list);
@@ -65,6 +65,8 @@ public class Lorenz extends Application {
 			initStage(700, 600, true, "favicon.png");
 			setScene(manager.createUI()).show();
 		});
+
+		tryUpdateApplication(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
 	}
 
 	public static void main(String[] args) {
