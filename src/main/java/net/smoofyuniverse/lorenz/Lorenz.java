@@ -62,7 +62,7 @@ public class Lorenz extends Application {
 		manager.start();
 
 		App.runLater(() -> {
-			initStage(700, 600, true, "favicon.png");
+			initStage(700, 600, "favicon.png");
 			setScene(manager.createUI()).show();
 		});
 
