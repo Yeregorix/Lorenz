@@ -28,9 +28,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-import static com.jogamp.opengl.GL.*;
 import static com.jogamp.opengl.GL2ES1.*;
-import static com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
 
 public class Renderer implements GLEventListener {
 	private final Camera camera;

@@ -75,7 +75,7 @@ public final class Controller implements Updatable, KeyListener, MouseListener {
 		}
 
 		if (this.displayHelp)
-			renderString(gl, glut, HELP, this.camera.getWidth() / 2, this.camera.getHeight() / 2, true);
+			renderString(gl, glut, HELP, this.camera.getWidth() / 2f, this.camera.getHeight() / 2f, true);
 	}
 
 	private static void renderString(GL2 gl, GLUT glut, List<String> lines, float x, float y, boolean center) {
