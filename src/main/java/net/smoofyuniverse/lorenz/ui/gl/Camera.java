@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Hugo Dupanloup (Yeregorix)
+ * Copyright (c) 2019-2020 Hugo Dupanloup (Yeregorix)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,9 @@ public final class Camera {
 	private float fov = DEFAULT_FOV;
 
 	private float posX, posY, posZ;
-	private float[] left = {-1, 0, 0}, up = {0, 1, 0}, forward = {0, 0, 1};
+	private final float[] left = {-1, 0, 0};
+	private final float[] up = {0, 1, 0};
+	private final float[] forward = {0, 0, 1};
 
 	public void load3D(GLU glu) {
 		glu.gluPerspective(this.fov, this.width / (float) this.height, 0.01f, 10000f);
