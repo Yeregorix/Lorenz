@@ -24,7 +24,6 @@ package net.smoofyuniverse.lorenz.util;
 
 import net.smoofyuniverse.common.app.App;
 import net.smoofyuniverse.common.app.State;
-import net.smoofyuniverse.common.event.Order;
 import net.smoofyuniverse.logger.core.Logger;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public final class Loop {
 	private Task task;
 
 	public Loop() {
-		State.SHUTDOWN.newListener(e -> stop(), Order.DEFAULT).register();
+		State.SHUTDOWN.newListener(e -> stop(), 0).register();
 	}
 
 	public void stop() {

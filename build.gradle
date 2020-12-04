@@ -25,7 +25,7 @@ plugins {
 }
 
 group 'net.smoofyuniverse'
-version = '1.0.8'
+version = '1.0.9'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -50,7 +50,7 @@ configurations {
 }
 
 dependencies {
-    shade 'net.smoofyuniverse:appcommon:1.0.4-SNAPSHOT'
+    shade 'net.smoofyuniverse:appcommon:1.1.0-SNAPSHOT'
     compile 'org.jogamp.gluegen:gluegen-rt-main:2.3.2'
     compile 'org.jogamp.jogl:jogl-all-main:2.3.2'
 }
