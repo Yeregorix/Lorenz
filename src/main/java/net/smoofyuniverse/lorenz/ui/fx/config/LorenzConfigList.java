@@ -22,7 +22,6 @@
 
 package net.smoofyuniverse.lorenz.ui.fx.config;
 
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import net.smoofyuniverse.common.fx.control.EmptySelectionModel;
@@ -93,26 +92,9 @@ public class LorenzConfigList extends ListView<LorenzConfig> {
 			this.pane.add(this.connect, 3, 0);
 			this.pane.add(remove, 5, 0);
 
-			this.pane.add(new Label("Pas:"), 0, 1);
-			this.pane.add(this.h, 1, 1);
-			this.pane.add(new Label("Points:"), 2, 1);
-			this.pane.add(this.points, 3, 1);
-			this.pane.add(new Label("Vitesse:"), 4, 1);
-			this.pane.add(this.speed, 5, 1);
-
-			this.pane.add(new Label("σ:"), 0, 2);
-			this.pane.add(this.sigma, 1, 2);
-			this.pane.add(new Label("ρ:"), 2, 2);
-			this.pane.add(this.rho, 3, 2);
-			this.pane.add(new Label("β:"), 4, 2);
-			this.pane.add(this.beta, 5, 2);
-
-			this.pane.add(new Label("x0"), 0, 3);
-			this.pane.add(this.x0, 1, 3);
-			this.pane.add(new Label("y0:"), 2, 3);
-			this.pane.add(this.y0, 3, 3);
-			this.pane.add(new Label("z0:"), 4, 3);
-			this.pane.add(this.z0, 5, 3);
+			this.pane.addRow(1, new Label("Pas:"), this.h, new Label("Points:"), this.points, new Label("Vitesse:"), this.speed);
+			this.pane.addRow(2, new Label("σ:"), this.sigma, new Label("ρ:"), this.rho, new Label("β:"), this.beta);
+			this.pane.addRow(3, new Label("x0:"), this.x0, new Label("y0:"), this.y0, new Label("z0:"), this.z0);
 
 			this.pane.add(this.progressBar, 0, 4, 6, 1);
 
@@ -124,38 +106,31 @@ public class LorenzConfigList extends ListView<LorenzConfig> {
 		}
 
 		@Override
-		public void updateIndex(int index) {
-			super.updateIndex(index);
-			unbindContent();
-			setGraphic(index == -1 || isEmpty() ? null : updateContent());
-		}
-
-		private void unbindContent() {
-			this.progressBar.progressProperty().unbind();
-		}
-
-		private Node updateContent() {
-			LorenzConfig item = getItem();
-			this.connect.setText(item.series.connect ? "Déconnecter" : "Connecter");
-			this.color.setValue(item.series.getColor());
-			this.sigma.setValue(item.sigma);
-			this.rho.setValue(item.rho);
-			this.beta.setValue(item.beta);
-			this.x0.setValue(item.x0);
-			this.y0.setValue(item.y0);
-			this.z0.setValue(item.z0);
-			this.h.setValue(item.h);
-			this.points.setValue(item.points);
-			this.speed.setValue(item.speed);
-			this.progressBar.progressProperty().bind(item.progressListener.progressProperty());
-			return this.pane;
-		}
-
-		@Override
 		protected void updateItem(LorenzConfig item, boolean empty) {
 			super.updateItem(item, empty);
-			unbindContent();
-			setGraphic(getIndex() == -1 || empty ? null : updateContent());
+
+			// Unbind previous value
+			this.progressBar.progressProperty().unbind();
+
+			if (empty) {
+				setGraphic(null);
+			} else {
+				// Update content
+				this.connect.setText(item.series.connect ? "Déconnecter" : "Connecter");
+				this.color.setValue(item.series.getColor());
+				this.sigma.setValue(item.sigma);
+				this.rho.setValue(item.rho);
+				this.beta.setValue(item.beta);
+				this.x0.setValue(item.x0);
+				this.y0.setValue(item.y0);
+				this.z0.setValue(item.z0);
+				this.h.setValue(item.h);
+				this.points.setValue(item.points);
+				this.speed.setValue(item.speed);
+				this.progressBar.progressProperty().bind(item.progressListener.progressProperty());
+
+				setGraphic(this.pane);
+			}
 		}
 	}
 }

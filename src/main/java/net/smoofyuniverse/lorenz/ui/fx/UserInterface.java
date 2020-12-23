@@ -71,9 +71,7 @@ public class UserInterface extends GridPane {
 		calculate.setMaxWidth(Double.MAX_VALUE);
 
 		add(list, 0, 0, 3, 1);
-		add(add, 0, 1);
-		add(clear, 1, 1);
-		add(calculate, 2, 1);
+		addRow(1, add, clear, calculate);
 
 		setVgap(5);
 		setHgap(5);
