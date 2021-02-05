@@ -22,7 +22,6 @@
 
 package net.smoofyuniverse.lorenz.util;
 
-import net.smoofyuniverse.common.app.App;
 import net.smoofyuniverse.common.app.State;
 import net.smoofyuniverse.logger.core.Logger;
 
@@ -30,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Loop {
-	private static final Logger logger = App.getLogger("Loop");
+	private static final Logger logger = Logger.get("Loop");
 	private static int tasks = 0;
 
 	public final List<Updatable> updatables = new ArrayList<>();

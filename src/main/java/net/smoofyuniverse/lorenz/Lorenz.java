@@ -22,16 +22,16 @@
 
 package net.smoofyuniverse.lorenz;
 
-import net.smoofyuniverse.common.app.App;
 import net.smoofyuniverse.common.app.Application;
 import net.smoofyuniverse.common.app.Arguments;
 import net.smoofyuniverse.common.app.OperatingSystem;
+import net.smoofyuniverse.common.environment.ApplicationUpdater;
 import net.smoofyuniverse.common.environment.DependencyInfo;
+import net.smoofyuniverse.common.environment.DependencyManager;
 import net.smoofyuniverse.common.environment.source.GithubReleaseSource;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class Lorenz extends Application {
 
@@ -41,32 +41,24 @@ public class Lorenz extends Application {
 
 	@Override
 	public void init() throws Exception {
-		requireUI();
-		initServices(Executors.newCachedThreadPool());
+		requireGUI();
+		initServices();
 
 		if (!this.devEnvironment) {
-			List<DependencyInfo> list = new LinkedList<>();
+			List<DependencyInfo> list = new ArrayList<>();
 			Libraries.get(OperatingSystem.CURRENT, list);
-
-			List<DependencyInfo> temp = new LinkedList<>(list);
-			updateDependencies(this.workingDir.resolve("libraries"), temp);
-			if (!temp.isEmpty()) {
-				shutdown();
-				return;
-			}
-
-			loadDependencies(list);
+			new DependencyManager(this, list).setup();
 		}
 
 		Manager manager = new Manager(this);
 		manager.start();
 
-		App.runLater(() -> {
+		runLater(() -> {
 			initStage(700, 600, "favicon.png");
 			setScene(manager.createUI()).show();
 		});
 
-		tryUpdateApplication(new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz"));
+		new ApplicationUpdater(this, new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz", getConnectionConfig())).run();
 	}
 
 	public static void main(String[] args) {
