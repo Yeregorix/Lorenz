@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
 public class Lorenz extends Application {
 
 	public Lorenz(Arguments args) {
-		super(args, "Lorenz", "1.0.9");
+		super(args, "Lorenz", "1.0.10");
 	}
 
 	@Override
