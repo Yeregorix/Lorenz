@@ -112,7 +112,7 @@ public class LorenzConfigList extends ListView<LorenzConfig> {
 			// Unbind previous value
 			this.progressBar.progressProperty().unbind();
 
-			if (empty) {
+			if (empty || item == null) {
 				setGraphic(null);
 			} else {
 				// Update content
