@@ -101,8 +101,8 @@ public class LorenzConfigList extends ListView<LorenzConfig> {
 			this.pane.setVgap(5);
 			this.pane.setHgap(5);
 
-			this.pane.getColumnConstraints().addAll(GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30), GridUtil.createColumn(10), GridUtil.createColumn(30));
-			this.pane.getRowConstraints().addAll(GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow(), GridUtil.createRow());
+			this.pane.getColumnConstraints().addAll(GridUtil.column(10), GridUtil.column(30), GridUtil.column(10), GridUtil.column(30), GridUtil.column(10), GridUtil.column(30));
+			this.pane.getRowConstraints().addAll(GridUtil.row(), GridUtil.row(), GridUtil.row(), GridUtil.row(), GridUtil.row());
 		}
 
 		@Override

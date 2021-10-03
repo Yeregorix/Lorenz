@@ -77,7 +77,7 @@ public class UserInterface extends GridPane {
 		setHgap(5);
 		setPadding(new Insets(8));
 
-		getColumnConstraints().addAll(GridUtil.createColumn(33), GridUtil.createColumn(33), GridUtil.createColumn(33));
-		getRowConstraints().addAll(GridUtil.createRow(Priority.ALWAYS), GridUtil.createRow());
+		getColumnConstraints().addAll(GridUtil.column(33), GridUtil.column(33), GridUtil.column(33));
+		getRowConstraints().addAll(GridUtil.row(Priority.ALWAYS), GridUtil.row());
 	}
 }

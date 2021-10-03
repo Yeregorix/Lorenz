@@ -27,7 +27,7 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
-import net.smoofyuniverse.common.app.Application;
+import net.smoofyuniverse.common.app.ApplicationManager;
 import net.smoofyuniverse.lorenz.ui.fx.UserInterface;
 import net.smoofyuniverse.lorenz.ui.gl.*;
 import net.smoofyuniverse.lorenz.util.Loop;
@@ -39,7 +39,7 @@ public class Manager {
 	private final Controller controller = new Controller(this.renderLoop, this.camera);
 	private final GLWindow window;
 
-	public Manager(Application app) {
+	public Manager(ApplicationManager app) {
 		GLProfile glp = GLProfile.getDefault();
 		GLCapabilities caps = new GLCapabilities(glp);
 		caps.setDoubleBuffered(false);

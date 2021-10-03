@@ -22,46 +22,26 @@
 
 package net.smoofyuniverse.lorenz;
 
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import net.smoofyuniverse.common.app.Application;
-import net.smoofyuniverse.common.app.Arguments;
-import net.smoofyuniverse.common.app.OperatingSystem;
-import net.smoofyuniverse.common.environment.ApplicationUpdater;
-import net.smoofyuniverse.common.environment.DependencyInfo;
-import net.smoofyuniverse.common.environment.DependencyManager;
-import net.smoofyuniverse.common.environment.source.GithubReleaseSource;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.smoofyuniverse.common.environment.source.GitHubReleaseSource;
 
 public class Lorenz extends Application {
 
-	public Lorenz(Arguments args) {
-		super(args, "Lorenz", "1.0.10");
-	}
-
 	@Override
-	public void init() throws Exception {
-		requireGUI();
-		initServices();
-
-		if (!this.devEnvironment) {
-			List<DependencyInfo> list = new ArrayList<>();
-			Libraries.get(OperatingSystem.CURRENT, list);
-			new DependencyManager(this, list).setup();
-		}
-
-		Manager manager = new Manager(this);
+	public void run() throws Exception {
+		Manager manager = new Manager(getManager());
 		manager.start();
 
 		runLater(() -> {
-			initStage(700, 600, "favicon.png");
-			setScene(manager.createUI()).show();
+			Stage stage = createStage(700, 600, "favicon.png");
+			setStage(stage);
+
+			stage.setScene(new Scene(manager.createUI()));
+			stage.show();
 		});
 
-		new ApplicationUpdater(this, new GithubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz", getConnectionConfig())).run();
-	}
-
-	public static void main(String[] args) {
-		new Lorenz(Arguments.parse(args)).launch();
+		getManager().runUpdater(new GitHubReleaseSource("Yeregorix", "Lorenz", null, "Lorenz", getManager().getConnectionConfig()));
 	}
 }

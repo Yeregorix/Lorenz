@@ -23,13 +23,14 @@
 package net.smoofyuniverse.lorenz.util;
 
 import net.smoofyuniverse.common.app.State;
-import net.smoofyuniverse.logger.core.Logger;
+import net.smoofyuniverse.common.logger.ApplicationLogger;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Loop {
-	private static final Logger logger = Logger.get("Loop");
+	private static final Logger logger = ApplicationLogger.get(Loop.class);
 	private static int tasks = 0;
 
 	public final List<Updatable> updatables = new ArrayList<>();
@@ -104,7 +105,7 @@ public final class Loop {
 				try {
 					u.init();
 				} catch (Exception e) {
-					logger.error("Updatable " + u + " failed to init", e);
+					logger.error("Updatable {} failed to init", u, e);
 				}
 			}
 
@@ -113,7 +114,7 @@ public final class Loop {
 					try {
 						u.update();
 					} catch (Exception e) {
-						logger.error("Updatable " + u + " failed to update", e);
+						logger.error("Updatable {} failed to update", u, e);
 					}
 				}
 
@@ -124,7 +125,7 @@ public final class Loop {
 					try {
 						Thread.sleep(remaining / 1_000_000, remaining % 1_000_000);
 					} catch (InterruptedException e) {
-						logger.error(e);
+						logger.error("Interruption", e);
 					}
 				}
 				t = t2;
@@ -134,7 +135,7 @@ public final class Loop {
 				try {
 					u.dispose();
 				} catch (Exception e) {
-					logger.error("Updatable " + u + " failed to dispose", e);
+					logger.error("Updatable {} failed to dispose", u, e);
 				}
 			}
 		}
